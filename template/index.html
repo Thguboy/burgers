@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FLAME BURGER — Toshkent Eng Yaxshi Burger</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Outfit',sans-serif;background:#0a0a0a;color:#fff;overflow-x:hidden}
+
+    /* 3D PERSPECTIVE */
+    .scene{perspective:1200px}
+    .card-3d{transform-style:preserve-3d;transition:transform .6s cubic-bezier(.23,1,.32,1),box-shadow .6s ease}
+    .card-3d:hover{transform:rotateY(-8deg) rotateX(5deg) translateZ(30px) scale(1.04);box-shadow:20px 30px 60px rgba(249,115,22,.4),-5px -5px 30px rgba(249,115,22,.1)}
+    .card-3d .card-face{backface-visibility:hidden}
+    .card-3d::after{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.08) 0%,transparent 60%);pointer-events:none;z-index:2}
+
+    /* GLOW EFFECTS */
+    .glow-orange{box-shadow:0 0 40px rgba(249,115,22,.3),0 0 80px rgba(249,115,22,.1)}
+    .glow-text{text-shadow:0 0 40px rgba(249,115,22,.6),0 0 80px rgba(249,115,22,.3)}
+
+    /* HERO */
+    .hero-3d{background:linear-gradient(135deg,#0a0a0a 0%,#1a0a00 50%,#0a0a0a 100%);position:relative;overflow:hidden}
+    .hero-3d::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(249,115,22,.15) 0%,transparent 70%);top:-100px;right:-100px;animation:pulse 4s ease-in-out infinite}
+    .hero-3d::after{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(234,88,12,.1) 0%,transparent 70%);bottom:-50px;left:-50px;animation:pulse 5s ease-in-out infinite reverse}
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.3);opacity:1}}
+
+    /* FLOATING ANIMATION */
+    .float{animation:floatAnim 6s ease-in-out infinite}
+    @keyframes floatAnim{0%,100%{transform:translateY(0) rotateZ(0deg)}50%{transform:translateY(-20px) rotateZ(2deg)}}
+
+    /* 3D TITLE */
+    .title-3d{text-shadow:0 1px 0 #ccc,0 2px 0 #c9c9c9,0 3px 0 #bbb,0 4px 0 #b9b9b9,0 5px 0 #aaa,0 6px 1px rgba(0,0,0,.1),0 0 5px rgba(0,0,0,.1),0 1px 3px rgba(0,0,0,.3),0 3px 5px rgba(0,0,0,.2),0 5px 10px rgba(0,0,0,.25),0 10px 10px rgba(0,0,0,.2),0 20px 20px rgba(0,0,0,.15)}
+
+    /* PROMO CARDS 3D */
+    .promo-3d{transform-style:preserve-3d;transition:all .5s ease;border:1px solid rgba(249,115,22,.2);position:relative;overflow:hidden}
+    .promo-3d::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(transparent,rgba(249,115,22,.1),transparent 30%);animation:rotateBorder 4s linear infinite}
+    .promo-3d:hover{transform:translateY(-10px) rotateX(5deg);box-shadow:0 25px 50px rgba(249,115,22,.3)}
+    @keyframes rotateBorder{100%{transform:rotate(360deg)}}
+
+    /* SECTION 3D HEADERS */
+    .section-title{position:relative;display:inline-block}
+    .section-title::after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:60%;height:4px;background:linear-gradient(90deg,transparent,#f97316,transparent);border-radius:2px}
+
+    /* SMOOTH SCROLL */
+    html{scroll-behavior:smooth}
+
+    /* NAVBAR 3D */
+    .nav-3d{backdrop-filter:blur(20px);background:rgba(10,10,10,.85);border-bottom:1px solid rgba(249,115,22,.3);box-shadow:0 4px 30px rgba(0,0,0,.5)}
+    .nav-link{position:relative;transition:all .3s}
+    .nav-link::after{content:'';position:absolute;bottom:-5px;left:0;width:0;height:2px;background:#f97316;transition:width .3s}
+    .nav-link:hover::after{width:100%}
+
+    /* BUTTON 3D */
+    .btn-3d{position:relative;transform-style:preserve-3d;transition:all .3s;box-shadow:0 6px 0 #c2410c,0 8px 20px rgba(0,0,0,.4)}
+    .btn-3d:hover{transform:translateY(-2px);box-shadow:0 8px 0 #c2410c,0 12px 30px rgba(0,0,0,.5)}
+    .btn-3d:active{transform:translateY(4px);box-shadow:0 2px 0 #c2410c,0 4px 10px rgba(0,0,0,.4)}
+
+    /* LOCATION & REVIEW CARD */
+    .info-card{background:linear-gradient(145deg,#1a1a1a,#111);border:1px solid rgba(249,115,22,.15);transition:all .5s;transform-style:preserve-3d}
+    .info-card:hover{transform:translateY(-8px) rotateX(3deg);border-color:rgba(249,115,22,.5);box-shadow:0 20px 40px rgba(249,115,22,.2)}
+
+    /* COMBO CARD */
+    .combo-3d{background:linear-gradient(145deg,#1a1a1a,#0d0d0d);border:1px solid rgba(249,115,22,.2);transform-style:preserve-3d;transition:all .6s}
+    .combo-3d:hover{transform:rotateY(3deg) translateZ(20px);box-shadow:15px 20px 50px rgba(249,115,22,.3)}
+
+    /* FOOTER GLOW */
+    .footer-glow{position:relative}
+    .footer-glow::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:50%;height:1px;background:linear-gradient(90deg,transparent,#f97316,transparent)}
+
+    /* MOBILE */
+    .mobile-menu{display:none}
+    @media(max-width:768px){
+      .mobile-menu{display:block}
+      .desktop-nav{display:none !important}
+      .hero-title{font-size:2.5rem !important}
+    }
+
+    /* SCROLL REVEAL */
+    .reveal{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.23,1,.32,1)}
+    .reveal.active{opacity:1;transform:translateY(0)}
+
+    /* === 3D BURGER === */
+    .burger-wrapper{position:absolute;right:5%;top:50%;transform:translateY(-50%);z-index:5;pointer-events:none}
+    .burger-3d{width:320px;height:320px;transform-style:preserve-3d;transition:transform .05s linear}
+    .burger-layer{position:absolute;left:50%;transform:translateX(-50%);border-radius:50%;transform-style:preserve-3d}
+    /* Top bun */
+    .bun-top{width:240px;height:120px;top:40px;background:radial-gradient(ellipse at 50% 60%,#f5a623,#d4850a);border-radius:120px 120px 20px 20px;box-shadow:0 -5px 20px rgba(0,0,0,.3),inset 0 -15px 30px rgba(0,0,0,.15),inset 0 10px 20px rgba(255,220,150,.4);z-index:6}
+    .bun-top::before{content:'';position:absolute;width:8px;height:8px;background:#f0d090;border-radius:50%;top:15px;left:40px;box-shadow:50px 10px 0 #f0d090,100px -5px 0 #f0d090,140px 8px 0 #f0d090,80px 20px 0 #f0d090,30px 30px 0 #f0d090,120px 25px 0 #f0d090}
+    /* Lettuce */
+    .lettuce{width:260px;height:30px;top:150px;background:linear-gradient(90deg,#4caf50,#66bb6a,#43a047,#66bb6a,#4caf50);border-radius:50%;z-index:5;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+    .lettuce::before{content:'';position:absolute;inset:-5px;border-radius:50%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent)}
+    /* Cheese */
+    .cheese{width:250px;height:22px;top:175px;background:linear-gradient(180deg,#ffc107,#ff9800);border-radius:3px;z-index:4;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+    .cheese::after{content:'';position:absolute;right:-15px;top:5px;width:30px;height:25px;background:#ffc107;border-radius:0 0 10px 10px;transform:rotate(-10deg)}
+    .cheese::before{content:'';position:absolute;left:-10px;top:3px;width:25px;height:20px;background:#ffb300;border-radius:0 0 8px 8px;transform:rotate(8deg)}
+    /* Patty */
+    .patty{width:240px;height:40px;top:192px;background:radial-gradient(ellipse,#5d3a1a,#3e2510);border-radius:20px;z-index:3;box-shadow:0 4px 15px rgba(0,0,0,.4),inset 0 -5px 10px rgba(0,0,0,.3)}
+    .patty::before{content:'';position:absolute;inset:3px;border-radius:inherit;background:radial-gradient(ellipse at 30% 30%,rgba(255,255,255,.05),transparent)}
+    /* Tomato */
+    .tomato{width:220px;height:18px;top:228px;background:linear-gradient(180deg,#e53935,#c62828);border-radius:50%;z-index:2;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+    /* Bottom bun */
+    .bun-bottom{width:250px;height:60px;top:240px;background:radial-gradient(ellipse at 50% 30%,#f5a623,#c8820a);border-radius:10px 10px 120px 120px;z-index:1;box-shadow:0 8px 25px rgba(0,0,0,.4),inset 0 5px 15px rgba(255,220,150,.2)}
+    /* Shadow */
+    .burger-shadow{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);width:200px;height:20px;background:radial-gradient(ellipse,rgba(0,0,0,.4),transparent);border-radius:50%;filter:blur(8px)}
+    /* Glow ring */
+    .burger-glow{position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(circle,rgba(249,115,22,.15) 0%,transparent 70%);z-index:-1;animation:burgerPulse 3s ease-in-out infinite}
+    @keyframes burgerPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+
+    @media(max-width:1024px){.burger-wrapper{display:none}}
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR 3D -->
+  <header class="nav-3d sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3">
+        <div class="text-4xl float">🔥</div>
+        <h1 class="text-3xl font-black tracking-tight">FLAME <span class="text-orange-500">BURGER</span></h1>
+      </a>
+      <nav class="desktop-nav flex items-center gap-8 text-lg font-semibold">
+        <a href="#menu" class="nav-link hover:text-orange-400">Menyu</a>
+        <a href="#combo" class="nav-link hover:text-orange-400">Kombo</a>
+        <a href="#promos" class="nav-link hover:text-orange-400">Aksiyalar</a>
+        <a href="#locations" class="nav-link hover:text-orange-400">Filiallar</a>
+        <a href="#reviews" class="nav-link hover:text-orange-400">Sharhlar</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="/buyurtma" class="btn-3d bg-orange-600 hover:bg-orange-500 px-6 py-3 rounded-2xl font-bold flex items-center gap-2 text-sm">
+          <i class="fa-solid fa-cart-shopping"></i> Buyurtma
+        </a>
+        <a href="tel:+998901234567" class="hidden md:flex bg-white/10 border border-white/20 px-5 py-3 rounded-2xl font-semibold items-center gap-2 hover:bg-orange-500 hover:border-orange-500 transition text-sm">
+          <i class="fa-solid fa-phone"></i> Qo'ng'iroq
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO 3D -->
+  <section id="hero" class="hero-3d min-h-screen flex items-center text-center scene" style="position:relative">
+    <div class="max-w-3xl mx-auto px-6 relative z-10" style="text-align:left;padding-left:5%">
+      <div class="mb-8">
+        <span class="inline-block bg-orange-600/20 border border-orange-500/30 text-orange-400 px-6 py-2 rounded-full text-sm font-semibold tracking-wide uppercase">🔥 Toshkentda #1 Burger</span>
+      </div>
+      <h2 class="hero-title text-5xl md:text-7xl font-black mb-6 leading-tight title-3d">
+        ISSIQ BURGER<br><span class="text-orange-500 glow-text">TEZ YETKAZISH</span>
+      </h2>
+      <p class="text-lg md:text-xl mb-10 text-gray-300 max-w-xl">Toshkent bo'ylab 30-45 daqiqada eng mazali burgerlar sizning eshigingiz oldida!</p>
+      <div class="flex flex-col sm:flex-row gap-5">
+        <a href="#menu" class="btn-3d bg-orange-600 text-white text-lg px-10 py-5 rounded-2xl font-bold hover:bg-orange-500 transition inline-flex items-center gap-3">
+          <i class="fa-solid fa-fire"></i> Menyuni ko'rish
+        </a>
+        <a href="/buyurtma" class="border-2 border-orange-500/50 text-lg px-10 py-5 rounded-2xl font-bold hover:bg-orange-500 hover:border-orange-500 transition inline-flex items-center gap-3">
+          <i class="fa-solid fa-bag-shopping"></i> Buyurtma berish
+        </a>
+      </div>
+      <div class="mt-12 grid grid-cols-3 gap-6 max-w-sm">
+        <div><p class="text-3xl font-black text-orange-500">5K+</p><p class="text-xs text-gray-400 mt-1">Mijozlar</p></div>
+        <div><p class="text-3xl font-black text-orange-500">30'</p><p class="text-xs text-gray-400 mt-1">Yetkazish</p></div>
+        <div><p class="text-3xl font-black text-orange-500">4.9★</p><p class="text-xs text-gray-400 mt-1">Reyting</p></div>
+      </div>
+    </div>
+    <!-- 3D BURGER -->
+    <div class="burger-wrapper" id="burger-wrapper">
+      <div class="burger-3d" id="burger-3d">
+        <div class="burger-glow"></div>
+        <div class="burger-layer bun-top"></div>
+        <div class="burger-layer lettuce"></div>
+        <div class="burger-layer cheese"></div>
+        <div class="burger-layer patty"></div>
+        <div class="burger-layer tomato"></div>
+        <div class="burger-layer bun-bottom"></div>
+        <div class="burger-shadow"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROMOTIONS 3D -->
+  <section id="promos" class="py-20 bg-gradient-to-b from-[#0a0a0a] to-[#111]">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-5xl font-black text-center mb-4 reveal"><span class="section-title">🏷️ Aksiyalar</span></h2>
+      <p class="text-center text-gray-400 mb-14 reveal">Bugungi maxsus takliflar</p>
+      <div class="grid md:grid-cols-3 gap-8 scene">
+        <div class="promo-3d rounded-3xl p-8 text-center bg-zinc-900/80 reveal">
+          <div class="text-5xl mb-4">🍔</div>
+          <h3 class="text-2xl font-bold text-orange-400">2+1 Burger</h3>
+          <p class="mt-4 text-gray-300">Ikki burger sotib oling — uchinchisi BEPUL!</p>
+          <span class="inline-block mt-6 text-sm bg-gradient-to-r from-orange-600 to-red-600 px-6 py-2 rounded-full font-semibold">Faqat bugun</span>
+        </div>
+        <div class="promo-3d rounded-3xl p-8 text-center bg-zinc-900/80 reveal">
+          <div class="text-5xl mb-4">🎉</div>
+          <h3 class="text-2xl font-bold text-orange-400">Kombo 20% Chegirma</h3>
+          <p class="mt-4 text-gray-300">Burger + Fri + Cola — endi arzonroq!</p>
+          <span class="inline-block mt-6 text-sm bg-gradient-to-r from-orange-600 to-amber-600 px-6 py-2 rounded-full font-semibold">Chegirma</span>
+        </div>
+        <div class="promo-3d rounded-3xl p-8 text-center bg-zinc-900/80 reveal">
+          <div class="text-5xl mb-4">🚚</div>
+          <h3 class="text-2xl font-bold text-orange-400">Bepul Yetkazish</h3>
+          <p class="mt-4 text-gray-300">100 000 so'mdan ortiq buyurtmalarga</p>
+          <span class="inline-block mt-6 text-sm bg-gradient-to-r from-green-600 to-emerald-600 px-6 py-2 rounded-full font-semibold">Doim</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU 3D -->
+  <section id="menu" class="py-20 bg-[#0a0a0a]">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-5xl font-black text-center mb-4 reveal"><span class="section-title">🔥 Menyu</span></h2>
+      <p class="text-center text-gray-400 mb-14 reveal">Eng yaxshi tanlovlar</p>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 scene">
+
+        <div class="card-3d bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-3xl overflow-hidden cursor-pointer reveal" onclick="location.href='/buyurtma'">
+          <div class="relative"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500" class="w-full h-56 object-cover">
+            <div class="absolute top-3 right-3 bg-orange-600 px-3 py-1 rounded-full text-xs font-bold">🔥 HIT</div></div>
+          <div class="p-6"><h3 class="text-xl font-bold">Classic Flame Burger</h3><p class="text-gray-400 text-sm mt-1">Mol go'shti, salat, pomidor, sous</p><div class="flex justify-between items-center mt-4"><p class="text-orange-500 font-black text-2xl">45 000 <span class="text-sm">so'm</span></p><div class="bg-orange-600/20 p-2 rounded-xl"><i class="fa-solid fa-plus text-orange-500"></i></div></div></div>
+        </div>
+
+        <div class="card-3d bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-3xl overflow-hidden cursor-pointer reveal" onclick="location.href='/buyurtma'">
+          <div class="relative"><img src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=500" class="w-full h-56 object-cover">
+            <div class="absolute top-3 right-3 bg-red-600 px-3 py-1 rounded-full text-xs font-bold">⭐ TOP</div></div>
+          <div class="p-6"><h3 class="text-xl font-bold">Cheese Lava Burger</h3><p class="text-gray-400 text-sm mt-1">Eriydigan pishloq, mol go'shti</p><div class="flex justify-between items-center mt-4"><p class="text-orange-500 font-black text-2xl">52 000 <span class="text-sm">so'm</span></p><div class="bg-orange-600/20 p-2 rounded-xl"><i class="fa-solid fa-plus text-orange-500"></i></div></div></div>
+        </div>
+
+        <div class="card-3d bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-3xl overflow-hidden cursor-pointer reveal" onclick="location.href='/buyurtma'">
+          <div class="relative"><img src="https://images.unsplash.com/photo-1553979459-d2229ba7e718?w=500" class="w-full h-56 object-cover">
+            <div class="absolute top-3 right-3 bg-yellow-600 px-3 py-1 rounded-full text-xs font-bold">🌶️ ACHCHIQ</div></div>
+          <div class="p-6"><h3 class="text-xl font-bold">Spicy Jalapeño</h3><p class="text-gray-400 text-sm mt-1">Jalapeño qalampir, achchiq sous</p><div class="flex justify-between items-center mt-4"><p class="text-orange-500 font-black text-2xl">49 000 <span class="text-sm">so'm</span></p><div class="bg-orange-600/20 p-2 rounded-xl"><i class="fa-solid fa-plus text-orange-500"></i></div></div></div>
+        </div>
+
+        <div class="card-3d bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-3xl overflow-hidden cursor-pointer reveal" onclick="location.href='/buyurtma'">
+          <div class="relative"><img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=500" class="w-full h-56 object-cover">
+            <div class="absolute top-3 right-3 bg-purple-600 px-3 py-1 rounded-full text-xs font-bold">👑 MEGA</div></div>
+          <div class="p-6"><h3 class="text-xl font-bold">Double Beef Monster</h3><p class="text-gray-400 text-sm mt-1">Ikki qavat mol go'shti, pishloq</p><div class="flex justify-between items-center mt-4"><p class="text-orange-500 font-black text-2xl">68 000 <span class="text-sm">so'm</span></p><div class="bg-orange-600/20 p-2 rounded-xl"><i class="fa-solid fa-plus text-orange-500"></i></div></div></div>
+        </div>
+
+        <div class="card-3d bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-3xl overflow-hidden cursor-pointer reveal" onclick="location.href='/buyurtma'">
+          <div class="relative"><img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=500" class="w-full h-56 object-cover"></div>
+          <div class="p-6"><h3 class="text-xl font-bold">BBQ Bacon Burger</h3><p class="text-gray-400 text-sm mt-1">Bekon, BBQ sous, piyoz halqalari</p><div class="flex justify-between items-center mt-4"><p class="text-orange-500 font-black text-2xl">55 000 <span class="text-sm">so'm</span></p><div class="bg-orange-600/20 p-2 rounded-xl"><i class="fa-solid fa-plus text-orange-500"></i></div></div></div>
+        </div>
+
+        <div class="card-3d bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-3xl overflow-hidden cursor-pointer reveal" onclick="location.href='/buyurtma'">
+          <div class="relative"><img src="https://images.unsplash.com/photo-1572802419224-296b0aeee15d?w=500" class="w-full h-56 object-cover">
+            <div class="absolute top-3 right-3 bg-green-600 px-3 py-1 rounded-full text-xs font-bold">🐔 TOVUQ</div></div>
+          <div class="p-6"><h3 class="text-xl font-bold">Crispy Chicken Burger</h3><p class="text-gray-400 text-sm mt-1">Qarsildoq tovuq, maxsus sous</p><div class="flex justify-between items-center mt-4"><p class="text-orange-500 font-black text-2xl">42 000 <span class="text-sm">so'm</span></p><div class="bg-orange-600/20 p-2 rounded-xl"><i class="fa-solid fa-plus text-orange-500"></i></div></div></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- COMBO 3D -->
+  <section id="combo" class="py-20 bg-gradient-to-b from-[#0a0a0a] to-[#0d0800]">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-5xl font-black text-center mb-14 reveal"><span class="section-title">🍟 Kombolar</span></h2>
+      <div class="grid md:grid-cols-2 gap-8 scene">
+        <div class="combo-3d rounded-3xl p-8 flex gap-6 items-center reveal">
+          <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=300" class="w-40 h-40 object-cover rounded-2xl shadow-lg shadow-orange-900/30">
+          <div><span class="text-xs bg-orange-600/20 text-orange-400 px-3 py-1 rounded-full font-semibold">OILAVIY</span><h3 class="text-2xl font-bold mt-2">Family Combo</h3><p class="text-orange-500 text-3xl font-black mt-2">159 000 <span class="text-sm">so'm</span></p><p class="text-gray-400 mt-3 text-sm">2 ta katta burger + 2 fri + 2 cola</p></div>
+        </div>
+        <div class="combo-3d rounded-3xl p-8 flex gap-6 items-center reveal">
+          <img src="https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=300" class="w-40 h-40 object-cover rounded-2xl shadow-lg shadow-orange-900/30">
+          <div><span class="text-xs bg-red-600/20 text-red-400 px-3 py-1 rounded-full font-semibold">DUO</span><h3 class="text-2xl font-bold mt-2">Duo Combo</h3><p class="text-orange-500 text-3xl font-black mt-2">89 000 <span class="text-sm">so'm</span></p><p class="text-gray-400 mt-3 text-sm">2 ta burger + 1 fri + 2 cola</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATIONS 3D -->
+  <section id="locations" class="py-20 bg-[#0a0a0a]">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-5xl font-black text-center mb-14 reveal"><span class="section-title">📍 Filiallar</span></h2>
+      <div class="grid md:grid-cols-2 gap-8 scene">
+        <div class="info-card rounded-3xl p-8 reveal">
+          <div class="flex items-center gap-3 mb-4"><div class="w-12 h-12 bg-orange-600/20 rounded-xl flex items-center justify-center"><i class="fa-solid fa-location-dot text-orange-500 text-xl"></i></div><h3 class="text-xl font-bold">Yunusobod Filiali</h3></div>
+          <p class="text-gray-400">Minor metro yaqinida • 10:00 - 23:00</p>
+          <a href="tel:+998901234567" class="inline-flex items-center gap-2 text-orange-500 mt-4 hover:text-orange-400"><i class="fa-solid fa-phone"></i> +998 90 123 45 67</a>
+        </div>
+        <div class="info-card rounded-3xl p-8 reveal">
+          <div class="flex items-center gap-3 mb-4"><div class="w-12 h-12 bg-orange-600/20 rounded-xl flex items-center justify-center"><i class="fa-solid fa-location-dot text-orange-500 text-xl"></i></div><h3 class="text-xl font-bold">Chilonzor Filiali</h3></div>
+          <p class="text-gray-400">Chilonzor 5 • 10:00 - 23:00</p>
+          <a href="tel:+998901234568" class="inline-flex items-center gap-2 text-orange-500 mt-4 hover:text-orange-400"><i class="fa-solid fa-phone"></i> +998 90 123 45 68</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEWS 3D -->
+  <section id="reviews" class="py-20 bg-gradient-to-b from-[#0a0a0a] to-[#111]">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-5xl font-black text-center mb-14 reveal"><span class="section-title">⭐ Sharhlar</span></h2>
+      <div class="grid md:grid-cols-3 gap-8 scene">
+        <div class="info-card rounded-3xl p-8 reveal">
+          <div class="flex gap-1 text-yellow-400 mb-4">★★★★★</div>
+          <p class="italic text-gray-300">"Burgerlari juda mazali! Issiq yetkazib berishdi. Xizmat a'lo darajada."</p>
+          <div class="flex items-center gap-3 mt-6"><div class="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center font-bold">S</div><div><p class="font-semibold">Sardor</p><p class="text-xs text-gray-500">Yunusobod</p></div></div>
+        </div>
+        <div class="info-card rounded-3xl p-8 reveal">
+          <div class="flex gap-1 text-yellow-400 mb-4">★★★★★</div>
+          <p class="italic text-gray-300">"Double Monster — bu bom! Har doim buyurtma beraman. Tavsiya qilaman!"</p>
+          <div class="flex items-center gap-3 mt-6"><div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center font-bold">A</div><div><p class="font-semibold">Aziza</p><p class="text-xs text-gray-500">Chilonzor</p></div></div>
+        </div>
+        <div class="info-card rounded-3xl p-8 reveal">
+          <div class="flex gap-1 text-yellow-400 mb-4">★★★★☆</div>
+          <p class="italic text-gray-300">"Oilam bilan har hafta kelamiz. Bolalar juda yaxshi ko'radi!"</p>
+          <div class="flex items-center gap-3 mt-6"><div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center font-bold">J</div><div><p class="font-semibold">Jasur</p><p class="text-xs text-gray-500">Sergeli</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER 3D -->
+  <footer class="footer-glow bg-[#080808] py-16">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-10">
+      <div>
+        <div class="flex items-center gap-3 mb-4"><div class="text-3xl">🔥</div><h3 class="text-2xl font-black">FLAME BURGER</h3></div>
+        <p class="text-gray-400 text-sm">Toshkentning eng mazali burgerlari. 2024-yildan beri xizmatda.</p>
+      </div>
+      <div><h4 class="font-bold mb-4 text-orange-400">Tez Havolalar</h4><a href="#menu" class="block text-gray-400 hover:text-white mb-2 text-sm">Menyu</a><a href="#combo" class="block text-gray-400 hover:text-white mb-2 text-sm">Kombolar</a><a href="/buyurtma" class="block text-gray-400 hover:text-white text-sm">Buyurtma berish</a></div>
+      <div><h4 class="font-bold mb-4 text-orange-400">Kontakt</h4><a href="tel:+998901234567" class="block text-orange-500 mb-2 text-sm">+998 90 123 45 67</a><p class="text-gray-400 text-sm">Har kuni 10:00 - 23:00</p></div>
+      <div><h4 class="font-bold mb-4 text-orange-400">Ijtimoiy Tarmoqlar</h4><div class="flex gap-4 text-2xl"><a href="#" class="text-gray-400 hover:text-pink-500 transition"><i class="fa-brands fa-instagram"></i></a><a href="#" class="text-gray-400 hover:text-blue-400 transition"><i class="fa-brands fa-telegram"></i></a><a href="#" class="text-gray-400 hover:text-blue-600 transition"><i class="fa-brands fa-facebook"></i></a></div></div>
+    </div>
+    <div class="text-center text-gray-600 text-xs mt-12">© 2024 FLAME BURGER. Barcha huquqlar himoyalangan.</div>
+  </footer>
+
+  <script>
+    // SCROLL REVEAL
+    const sr=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('active');sr.unobserve(e.target)}})},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+    document.querySelectorAll('.reveal').forEach(el=>sr.observe(el));
+
+    // 3D TILT ON MOUSE
+    document.querySelectorAll('.card-3d').forEach(card=>{
+      card.addEventListener('mousemove',e=>{
+        const r=card.getBoundingClientRect();
+        const x=(e.clientX-r.left)/r.width-.5;
+        const y=(e.clientY-r.top)/r.height-.5;
+        card.style.transform=`rotateY(${x*15}deg) rotateX(${-y*15}deg) translateZ(20px) scale(1.03)`;
+      });
+      card.addEventListener('mouseleave',()=>{card.style.transform='';});
+    });
+
+    // === 3D BURGER SCROLL ANIMATION ===
+    const burger=document.getElementById('burger-3d');
+    const wrapper=document.getElementById('burger-wrapper');
+    const hero=document.getElementById('hero');
+    if(burger && wrapper && hero){
+      window.addEventListener('scroll',()=>{
+        const heroH=hero.offsetHeight;
+        const scrollY=window.scrollY;
+        const progress=Math.min(scrollY/heroH,1); // 0..1
+
+        // Phase 1 (0-50%): Rotate Y 0->180deg, stay in place
+        // Phase 2 (50-100%): Finish rotation 180->360, scale down, move down + behind
+        if(progress<=0.5){
+          const p1=progress/0.5; // 0..1 within phase1
+          const rotY=p1*180;
+          const rotX=Math.sin(p1*Math.PI)*15;
+          burger.style.transform=`rotateY(${rotY}deg) rotateX(${rotX}deg)`;
+          wrapper.style.transform=`translateY(-50%) scale(1)`;
+          wrapper.style.opacity='1';
+          wrapper.style.zIndex='5';
+        } else {
+          const p2=(progress-0.5)/0.5; // 0..1 within phase2
+          const rotY=180+p2*180;
+          const scl=1-p2*0.6; // 1 -> 0.4
+          const moveDown=p2*200; // move down
+          burger.style.transform=`rotateY(${rotY}deg) rotateX(0deg)`;
+          wrapper.style.transform=`translateY(calc(-50% + ${moveDown}px)) scale(${scl})`;
+          wrapper.style.opacity=`${1-p2*0.7}`;
+          wrapper.style.zIndex='-1';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

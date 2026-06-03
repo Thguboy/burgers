@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buyurtma Berish — FLAME BURGER</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Outfit',sans-serif;background:#0a0a0a;color:#fff;overflow-x:hidden}
+    .scene{perspective:1200px}
+    .card-3d{transform-style:preserve-3d;transition:transform .5s cubic-bezier(.23,1,.32,1),box-shadow .5s ease}
+    .card-3d:hover{transform:rotateY(-6deg) rotateX(4deg) translateZ(20px) scale(1.03);box-shadow:15px 20px 50px rgba(249,115,22,.35)}
+    .card-3d::after{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.06) 0%,transparent 60%);pointer-events:none;z-index:2}
+
+    .nav-3d{backdrop-filter:blur(20px);background:rgba(10,10,10,.85);border-bottom:1px solid rgba(249,115,22,.3);box-shadow:0 4px 30px rgba(0,0,0,.5)}
+
+    .btn-3d{position:relative;transform-style:preserve-3d;transition:all .3s;box-shadow:0 6px 0 #c2410c,0 8px 20px rgba(0,0,0,.4)}
+    .btn-3d:hover{transform:translateY(-2px);box-shadow:0 8px 0 #c2410c,0 12px 30px rgba(0,0,0,.5)}
+    .btn-3d:active{transform:translateY(4px);box-shadow:0 2px 0 #c2410c,0 4px 10px rgba(0,0,0,.4)}
+
+    .cart-3d{background:linear-gradient(145deg,#1a1a1a,#0d0d0d);border:1px solid rgba(249,115,22,.2);transform-style:preserve-3d;box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05)}
+
+    .input-3d{background:linear-gradient(145deg,#1a1a1a,#111);border:1px solid rgba(255,255,255,.08);transition:all .3s;box-shadow:inset 0 2px 4px rgba(0,0,0,.3)}
+    .input-3d:focus{border-color:#f97316;box-shadow:inset 0 2px 4px rgba(0,0,0,.3),0 0 20px rgba(249,115,22,.15);outline:none}
+
+    .menu-item-3d{background:linear-gradient(145deg,#1a1a1a,#111);border:1px solid rgba(255,255,255,.05);transition:all .5s;transform-style:preserve-3d;position:relative;overflow:hidden}
+    .menu-item-3d:hover{transform:translateY(-8px) rotateX(3deg);border-color:rgba(249,115,22,.3);box-shadow:0 20px 40px rgba(249,115,22,.2)}
+    .menu-item-3d.selected{border-color:#f97316;box-shadow:0 0 30px rgba(249,115,22,.3)}
+
+    .cart-item-3d{background:linear-gradient(145deg,#222,#1a1a1a);border:1px solid rgba(255,255,255,.05);transition:all .3s}
+    .cart-item-3d:hover{border-color:rgba(249,115,22,.3)}
+
+    .glow-text{text-shadow:0 0 40px rgba(249,115,22,.6),0 0 80px rgba(249,115,22,.3)}
+    .title-3d{text-shadow:0 1px 0 #ccc,0 2px 0 #bbb,0 3px 0 #aaa,0 4px 1px rgba(0,0,0,.1),0 0 5px rgba(0,0,0,.1),0 1px 3px rgba(0,0,0,.3),0 5px 10px rgba(0,0,0,.25),0 10px 10px rgba(0,0,0,.2)}
+
+    .float{animation:floatAnim 6s ease-in-out infinite}
+    @keyframes floatAnim{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+    .reveal{opacity:0;transform:translateY(30px);transition:all .6s cubic-bezier(.23,1,.32,1)}
+    .reveal.active{opacity:1;transform:translateY(0)}
+
+    .page-bg{position:relative}
+    .page-bg::before{content:'';position:fixed;width:500px;height:500px;background:radial-gradient(circle,rgba(249,115,22,.08) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none;z-index:0}
+    .page-bg::after{content:'';position:fixed;width:400px;height:400px;background:radial-gradient(circle,rgba(234,88,12,.06) 0%,transparent 70%);bottom:-50px;left:-50px;pointer-events:none;z-index:0}
+
+    /* SUCCESS MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .3s}
+    .modal-overlay.show{opacity:1;pointer-events:all}
+    .modal-box{background:linear-gradient(145deg,#1a1a1a,#0d0d0d);border:1px solid rgba(249,115,22,.3);border-radius:2rem;padding:3rem;max-width:450px;width:90%;text-align:center;transform:scale(.8);transition:transform .4s cubic-bezier(.23,1,.32,1);box-shadow:0 30px 80px rgba(249,115,22,.2)}
+    .modal-overlay.show .modal-box{transform:scale(1)}
+
+    @media(max-width:768px){.hero-title{font-size:2rem !important}}
+    html{scroll-behavior:smooth}
+  </style>
+</head>
+<body class="page-bg">
+
+  <!-- NAV -->
+  <header class="nav-3d sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3">
+        <div class="text-3xl float">🔥</div>
+        <h1 class="text-2xl font-black">FLAME <span class="text-orange-500">BURGER</span></h1>
+      </a>
+      <a href="/" class="flex items-center gap-2 text-orange-400 hover:text-orange-300 font-semibold transition">
+        <i class="fa-solid fa-arrow-left"></i> Asosiy sahifa
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <div class="max-w-7xl mx-auto px-6 py-12 relative z-10">
+    <div class="text-center mb-12">
+      <span class="inline-block bg-orange-600/20 border border-orange-500/30 text-orange-400 px-5 py-2 rounded-full text-sm font-semibold mb-4">🛒 Onlayn Buyurtma</span>
+      <h2 class="hero-title text-5xl md:text-6xl font-black title-3d">Buyurtma <span class="text-orange-500 glow-text">Berish</span></h2>
+    </div>
+
+    <div class="grid lg:grid-cols-12 gap-10">
+      <!-- MENU -->
+      <div class="lg:col-span-7">
+        <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
+          <div class="w-10 h-10 bg-orange-600/20 rounded-xl flex items-center justify-center"><i class="fa-solid fa-burger text-orange-500"></i></div>
+          Menu tanlang
+        </h3>
+        <div class="grid md:grid-cols-2 gap-5 scene" id="menu-container"></div>
+      </div>
+
+      <!-- CART -->
+      <div class="lg:col-span-5">
+        <div class="cart-3d rounded-3xl p-8 sticky top-24">
+          <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
+            <div class="w-10 h-10 bg-orange-600/20 rounded-xl flex items-center justify-center"><i class="fa-solid fa-cart-shopping text-orange-500"></i></div>
+            Buyurtmangiz
+          </h3>
+
+          <div id="cart-items" class="space-y-3 mb-8 min-h-[200px]"></div>
+
+          <div class="border-t border-white/10 pt-6">
+            <div class="flex justify-between text-xl items-center">
+              <span class="text-gray-400">Jami:</span>
+              <span id="total-price" class="font-black text-2xl text-orange-500">0 so'm</span>
+            </div>
+          </div>
+
+          <!-- FORM -->
+          <div class="mt-8 space-y-5">
+            <div>
+              <label class="block text-gray-400 mb-2 text-sm font-semibold">Ism va Familiya</label>
+              <input id="customer-name" type="text" class="input-3d w-full rounded-2xl px-5 py-4" placeholder="Sardor Abdullayev">
+            </div>
+            <div>
+              <label class="block text-gray-400 mb-2 text-sm font-semibold">Telefon raqam</label>
+              <input id="customer-phone" type="tel" class="input-3d w-full rounded-2xl px-5 py-4" placeholder="+998 90 123 45 67">
+            </div>
+            <div>
+              <label class="block text-gray-400 mb-2 text-sm font-semibold">Manzil</label>
+              <textarea id="customer-address" rows="3" class="input-3d w-full rounded-2xl px-5 py-4" placeholder="Ko'cha, uy, xonadon..."></textarea>
+            </div>
+          </div>
+
+          <button onclick="submitOrder()" class="btn-3d mt-8 w-full bg-orange-600 hover:bg-orange-500 py-5 rounded-2xl text-lg font-bold transition-all flex items-center justify-center gap-3">
+            <i class="fa-solid fa-check-circle"></i> Buyurtmani tasdiqlash
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS MODAL -->
+  <div class="modal-overlay" id="success-modal">
+    <div class="modal-box">
+      <div class="text-6xl mb-4">✅</div>
+      <h3 class="text-2xl font-black mb-2">Buyurtma qabul qilindi!</h3>
+      <p class="text-gray-400 mb-2" id="modal-details"></p>
+      <p class="text-orange-400 font-semibold mb-6">Tez orada siz bilan bog'lanamiz! 🔥</p>
+      <button onclick="closeModal()" class="btn-3d bg-orange-600 hover:bg-orange-500 px-8 py-3 rounded-2xl font-bold">Yopish</button>
+    </div>
+  </div>
+
+  <script>
+    const menuItems=[
+      {id:1,name:"Classic Flame Burger",price:45000,img:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400",tag:"🔥 HIT",tagColor:"bg-orange-600"},
+      {id:2,name:"Cheese Lava Burger",price:52000,img:"https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400",tag:"⭐ TOP",tagColor:"bg-red-600"},
+      {id:3,name:"Spicy Jalapeño",price:49000,img:"https://images.unsplash.com/photo-1553979459-d2229ba7e718?w=400",tag:"🌶️",tagColor:"bg-yellow-600"},
+      {id:4,name:"Double Beef Monster",price:68000,img:"https://images.unsplash.com/photo-1550547660-d9450f859349?w=400",tag:"👑 MEGA",tagColor:"bg-purple-600"},
+      {id:5,name:"BBQ Bacon Burger",price:55000,img:"https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=400",tag:"🥓",tagColor:"bg-amber-700"},
+      {id:6,name:"Crispy Chicken",price:42000,img:"https://images.unsplash.com/photo-1572802419224-296b0aeee15d?w=400",tag:"🐔",tagColor:"bg-green-600"}
+    ];
+    let cart=[];
+
+    function renderMenu(){
+      const c=document.getElementById('menu-container');
+      c.innerHTML=menuItems.map(item=>`
+        <div class="menu-item-3d rounded-2xl overflow-hidden cursor-pointer reveal" onclick="addToCart(${item.id})" id="item-${item.id}">
+          <div class="relative">
+            <img src="${item.img}" class="w-full h-44 object-cover">
+            <div class="absolute top-2 right-2 ${item.tagColor} px-2 py-1 rounded-full text-xs font-bold">${item.tag}</div>
+          </div>
+          <div class="p-5">
+            <h4 class="font-bold text-lg">${item.name}</h4>
+            <div class="flex justify-between items-center mt-3">
+              <p class="text-orange-500 font-black text-xl">${item.price.toLocaleString()} <span class="text-xs">so'm</span></p>
+              <div class="bg-orange-600 hover:bg-orange-500 w-9 h-9 rounded-xl flex items-center justify-center transition">
+                <i class="fa-solid fa-plus text-sm"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      // Trigger reveal
+      setTimeout(()=>{document.querySelectorAll('.reveal').forEach(el=>el.classList.add('active'))},100);
+    }
+
+    function addToCart(id){
+      const item=menuItems.find(m=>m.id===id);
+      const existing=cart.find(c=>c.id===id);
+      if(existing){existing.qty++}else{cart.push({...item,qty:1})}
+      document.getElementById('item-'+id).classList.add('selected');
+      setTimeout(()=>document.getElementById('item-'+id).classList.remove('selected'),600);
+      renderCart();
+    }
+
+    function changeQty(id,delta){
+      const idx=cart.findIndex(c=>c.id===id);
+      if(idx===-1)return;
+      cart[idx].qty+=delta;
+      if(cart[idx].qty<=0)cart.splice(idx,1);
+      renderCart();
+    }
+
+    function renderCart(){
+      const c=document.getElementById('cart-items');
+      const t=document.getElementById('total-price');
+      let total=0,html='';
+      if(cart.length===0){
+        html='<div class="text-center py-12"><div class="text-4xl mb-3 opacity-30">🛒</div><p class="text-gray-500">Hali hech narsa tanlanmadi...</p></div>';
+      }else{
+        cart.forEach(item=>{
+          total+=item.price*item.qty;
+          html+=`
+            <div class="cart-item-3d rounded-2xl p-4 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <img src="${item.img}" class="w-12 h-12 rounded-xl object-cover">
+                <div>
+                  <p class="font-semibold text-sm">${item.name}</p>
+                  <p class="text-xs text-gray-500">${item.price.toLocaleString()} so'm</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="changeQty(${item.id},-1)" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-red-600/30 flex items-center justify-center text-sm transition">−</button>
+                <span class="font-bold text-orange-400 w-6 text-center">${item.qty}</span>
+                <button onclick="changeQty(${item.id},1)" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-green-600/30 flex items-center justify-center text-sm transition">+</button>
+              </div>
+            </div>`;
+        });
+      }
+      c.innerHTML=html;
+      t.textContent=total.toLocaleString()+" so'm";
+    }
+
+    function submitOrder(){
+      const n=document.getElementById('customer-name').value;
+      const p=document.getElementById('customer-phone').value;
+      const a=document.getElementById('customer-address').value;
+      if(!n||!p||!a){alert("Iltimos, ism, telefon va manzilni to'ldiring!");return}
+      if(cart.length===0){alert("Kamida bitta mahsulot tanlang!");return}
+      document.getElementById('modal-details').textContent=`Mijoz: ${n} | Tel: ${p} | Jami: ${document.getElementById('total-price').textContent}`;
+      document.getElementById('success-modal').classList.add('show');
+      cart=[];renderCart();
+      document.getElementById('customer-name').value='';
+      document.getElementById('customer-phone').value='';
+      document.getElementById('customer-address').value='';
+    }
+
+    function closeModal(){document.getElementById('success-modal').classList.remove('show')}
+
+    window.onload=()=>{renderMenu();renderCart()};
+  </script>
+</body>
+</html>
