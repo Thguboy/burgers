@@ -46,6 +46,18 @@
     .page-bg::before{content:'';position:fixed;width:500px;height:500px;background:radial-gradient(circle,rgba(249,115,22,.08) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none;z-index:0}
     .page-bg::after{content:'';position:fixed;width:400px;height:400px;background:radial-gradient(circle,rgba(234,88,12,.06) 0%,transparent 70%);bottom:-50px;left:-50px;pointer-events:none;z-index:0}
 
+    /* === 3D BURGER DECORATION === */
+    .burger-wrapper-mini{position:absolute;right:2rem;top:1rem;z-index:5;pointer-events:none;transform:scale(0.4);transform-origin:top right}
+    .burger-3d{width:320px;height:320px;transform-style:preserve-3d;animation:rotateLoop 10s linear infinite}
+    @keyframes rotateLoop{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
+    .burger-layer{position:absolute;left:50%;transform:translateX(-50%);border-radius:50%;transform-style:preserve-3d}
+    .bun-top{width:240px;height:120px;top:40px;background:radial-gradient(ellipse at 50% 60%,#f5a623,#d4850a);border-radius:120px 120px 20px 20px;box-shadow:0 -5px 20px rgba(0,0,0,.3),inset 0 -15px 30px rgba(0,0,0,.15),inset 0 10px 20px rgba(255,220,150,.4);z-index:6}
+    .lettuce{width:260px;height:30px;top:150px;background:linear-gradient(90deg,#4caf50,#66bb6a,#43a047);border-radius:50%;z-index:5}
+    .cheese{width:250px;height:22px;top:175px;background:linear-gradient(180deg,#ffc107,#ff9800);border-radius:3px;z-index:4}
+    .patty{width:240px;height:40px;top:192px;background:radial-gradient(ellipse,#5d3a1a,#3e2510);border-radius:20px;z-index:3}
+    .tomato{width:220px;height:18px;top:228px;background:linear-gradient(180deg,#e53935,#c62828);border-radius:50%;z-index:2}
+    .bun-bottom{width:250px;height:60px;top:240px;background:radial-gradient(ellipse at 50% 30%,#f5a623,#c8820a);border-radius:10px 10px 120px 120px;z-index:1}
+
     /* SUCCESS MODAL */
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity .3s}
     .modal-overlay.show{opacity:1;pointer-events:all}
@@ -60,12 +72,25 @@
 
   <!-- NAV -->
   <header class="nav-3d sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between relative">
       <a href="/" class="flex items-center gap-3">
         <div class="text-3xl float">🔥</div>
         <h1 class="text-2xl font-black">FLAME <span class="text-orange-500">BURGER</span></h1>
       </a>
-      <a href="/" class="flex items-center gap-2 text-orange-400 hover:text-orange-300 font-semibold transition">
+      
+      <!-- MINI 3D BURGER DECOR -->
+      <div class="burger-wrapper-mini hidden md:block">
+        <div class="burger-3d">
+          <div class="burger-layer bun-top"></div>
+          <div class="burger-layer lettuce"></div>
+          <div class="burger-layer cheese"></div>
+          <div class="burger-layer patty"></div>
+          <div class="burger-layer tomato"></div>
+          <div class="burger-layer bun-bottom"></div>
+        </div>
+      </div>
+
+      <a href="/" class="flex items-center gap-2 text-orange-400 hover:text-orange-300 font-semibold transition z-10">
         <i class="fa-solid fa-arrow-left"></i> Asosiy sahifa
       </a>
     </div>
@@ -237,7 +262,26 @@
 
     function closeModal(){document.getElementById('success-modal').classList.remove('show')}
 
-    window.onload=()=>{renderMenu();renderCart()};
+    // === 3D TILT FOR MENU CARDS ===
+    function initTilt() {
+      document.querySelectorAll('.menu-item-3d').forEach(card => {
+        card.addEventListener('mousemove', e => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - 0.5;
+          const y = (e.clientY - r.top) / r.height - 0.5;
+          card.style.transform = `translateY(-8px) rotateY(${x * 20}deg) rotateX(${-y * 20}deg) scale(1.05)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    }
+
+    window.onload=()=>{
+      renderMenu();
+      renderCart();
+      initTilt();
+    };
   </script>
 </body>
 </html>
